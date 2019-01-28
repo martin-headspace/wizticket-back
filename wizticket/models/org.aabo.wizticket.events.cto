@@ -1,0 +1,63 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Events Contract Definition
+ */
+
+namespace org.aabo.wizticket.events
+
+import org.aabo.wizticket.tickets.*
+import org.aabo.wizticket.participants.*
+
+/* ####### ASSETS ###### */
+
+
+asset EventPlace identified by EPId {
+  o String EPId
+  o String name
+  o String description
+  o Address address
+  o Integer[] seating
+}
+
+asset SocialEvent identified by SEId {
+  o String SEId
+  o String title
+  o String description
+  o DateTime eventDate
+  o Double[] proposedPricing
+  o Ticket[] generatedTickets
+  --> Artist artist
+}
+
+
+/* ####### TRANSACTIONS ###### */
+
+transaction CreateEvent {
+  o String EPId
+  o String ParticipantKey
+  o String title
+  o String description
+  o DateTime eventDate
+  o Double[] proposedPricing
+}
+
+transaction CreateEventPlace {
+  o String ParticipantKey
+  o String name
+  o String description
+  o Address address
+  o Integer[] seating
+}
