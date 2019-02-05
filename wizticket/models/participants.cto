@@ -1,0 +1,25 @@
+/**
+* Participant file
+* All participants go here
+*/
+
+namespace org.madducks.wizticket.participants
+
+/* Imports */
+
+import org.madducks.wizticket.utilities.*
+
+participant Fan identified by fanId {
+ o String fanId 
+ o PersonalInformation information
+}
+
+participant EventSpaceOwner identified by ESId {
+ o String ESId
+ o PersonalInformation information
+}
+
+participant Artist identified by artistId {
+  o String artistId
+  o PersonalInformation information
+}

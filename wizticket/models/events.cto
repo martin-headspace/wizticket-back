@@ -1,0 +1,45 @@
+/**
+* Event file
+* All event information goes here 
+*/
+
+
+namespace org.madducks.wizticket.events
+
+/* Imports */
+import org.madducks.wizticket.utilities.Address
+import org.madducks.wizticket.participants.*
+  
+asset EventSpace identified by ESId {
+ o String ESId
+ o String name
+ o String description
+ o Address address
+ o Integer[] seating
+ o EventHappening[] events
+ --> EventSpaceOwner owner
+}
+
+asset EventHappening identified by EId {
+  o String EId
+  o String name
+  o String description
+  o Artist[] artists
+  o DateTime eventDate
+  --> EventSpace space
+  --> Artist owner 
+}
+
+/* #### TRANSACTIONS #### */
+
+/* Event TXs */
+
+transaction postEvent {
+ o String name
+ o String description
+ o Artist[] artists
+ o DateTime eventDate
+ o Double[] pricing
+ --> EventSpace space
+ --> Artist owner
+}

@@ -12,46 +12,17 @@
  * limitations under the License.
  */
 
-/**
- * Tickets Contract Definition
- */
+'use strict';
 
-namespace org.aabo.wizticket.tickets
+const composerSteps = require('composer-cucumber-steps');
+const cucumber = require('cucumber');
 
+module.exports = function () {
+    composerSteps.call(this);
+};
 
-/* ####### SUPPORT ###### */
-
-enum SeatCategory {
-  o PLATINUM
-  o GOLD
-  o SILVER
-  o BRONCE
+if (cucumber.defineSupportCode) {
+    cucumber.defineSupportCode((context) => {
+        module.exports.call(context);
+    });
 }
-
-
-/* ####### ASSETS ###### */
-
-
-asset Ticket identified by ticketId {
-  o String ticketId
-  o SeatCategory category
-  o Integer seatNumber
-  o Double faceValue
-}
-
-
-/* ####### TRANSACTIONS ###### */
-
-
-transaction BuyTickets {
-  o String[] ticketId
-  o String[] participantKey
-}
-
-transaction ResellTickets {
-  o String[] ticketId
-  o String from
-  o String to
-  o Double proposedPrice
-}
-

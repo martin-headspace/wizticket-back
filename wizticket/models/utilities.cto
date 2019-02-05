@@ -1,0 +1,34 @@
+/**
+* Utilities files
+* Here goes all concepts and enums on the application
+*/
+
+namespace org.madducks.wizticket.utilities
+
+concept Address {
+  o String city optional
+  o String country optional
+  o String locality optional
+  o String region optional
+  o String street optional
+  o String street2 optional
+  o String street3 optional
+  o String postalCode optional
+  o String postOfficeBoxNumber optional
+}
+
+enum Gender {
+ o MALE
+ o FEMALE
+ o OTHER
+}
+
+concept PersonalInformation { 
+ o String title optional
+ o String firstname optional
+ o String lastname optional
+ o Gender gender optional
+ o Address address optional
+ o String email optional
+ o String mobilePhone optional
+}

@@ -12,6 +12,26 @@
  * limitations under the License.
  */
 
+/* ##### Global access rules */
+
+rule WizTicketParticipantPermissionHistorian {
+  description: "Grant ALL Participants write permission HistorianRecord to the Historian"
+  participant: "org.madducks.wizticket.participants.*"
+  operation: CREATE
+  resource: "org.hyperledger.composer.system.HistorianRecord"
+  action: ALLOW  
+}
+
+rule AcmeNetworkAdminPermissionSystem {
+  description: "can READ the system registries"
+  participant: "ANY"
+  operation: READ
+  resource: "org.hyperledger.composer.system.**"
+  action: ALLOW  
+}
+
+/* ##### Access logic for the Administraor */
+
 rule NetworkAdminUser {
     description: "Grant business network administrators full access to user resources"
     participant: "org.hyperledger.composer.system.NetworkAdmin"
@@ -26,4 +46,76 @@ rule NetworkAdminSystem {
     operation: ALL
     resource: "org.hyperledger.composer.system.**"
     action: ALLOW
+}
+
+/* ###### Access Logic for the Fan */
+
+rule FanTicketPurchase {
+ 	description: "Grants Fan access to ticket buying"
+  	participant: "org.madducks.wizticket.participants.Fan"
+  	operation: CREATE
+    resource: "org.madducks.wizticket.tickets.buyTicket"
+  	action: ALLOW
+}
+
+rule FanTicketListing {
+ 	description: "Grants Ticket Reading rights to the fan"
+  	participant(p): "org.madducks.wizticket.participants.Fan"
+  	operation: READ
+    resource(t): "org.madducks.wizticket.tickets.Ticket"
+  	condition: (t.status === "RELEASED" || p.getIdentifier() === t.owner.getIdentifier())
+  	action: ALLOW
+}
+
+rule FanEventListing {
+  	description: "Grants Fan access to Event listings and Event Spaces"
+  	participant: "org.madducks.wizticket.participants.Fan"
+  	operation: READ
+    resource: "org.madducks.wizticket.events.*"
+  	action: ALLOW
+}
+/* ###### Access Logic for the Artist */
+
+rule ArtistEventCreation {
+ 	description: "Grants Artists access to the Event Creation method"
+  	participant: "org.madducks.wizticket.participants.Artist"
+  	operation: CREATE
+    resource: "org.madducks.wizticket.events.postEvent"
+  	action: ALLOW
+}
+
+rule ArtistEventListing {
+ 	description: "Grants Artists access to their event's management"
+  	participant(p): "org.madducks.wizticket.participants.Artist"
+  	operation: ALL
+    resource(e): "org.madducks.wizticket.events.EventHappening"
+  	condition: (e.owner.getIdentifier() === p.getIdentifier())
+  	action: ALLOW
+}
+
+rule EventSpacesListing {
+ 	description: "Grants Artists reading access to event places"
+  	participant: "org.madducks.wizticket.participants.Artist"
+  	operation: READ
+    resource: "org.madducks.wizticket.events.EventSpace"
+  	action: ALLOW
+}
+
+rule TicketListing {
+  	description: "Grants Artists access to unsold ticket information"
+  	participant(p): "org.madducks.wizticket.participants.Artist"
+  	operation: ALL
+    resource(t): "org.madducks.wizticket.tickets.Ticket"
+  	condition: (t.status === "RELEASED")
+  	action: ALLOW
+}
+
+/* ###### Access Logic for the EventSpaceOwner */
+
+rule SpaceOwnerManagement {
+ 	description: "Grant Space Owners access to Event Space creation and management"
+  	participant: "org.madducks.wizticket.participants.EventSpaceOwner"
+  	operation: ALL
+    resource: "org.madducks.wizticket.events.EventSpace"
+  	action: ALLOW
 }
