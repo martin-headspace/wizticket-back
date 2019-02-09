@@ -102,7 +102,7 @@ module.exports = {
     * @param {String} artistId 
     */
 
-    registerArtist: async function (artistId) {
+    registerArtist: async function (artistId,firstName,lastName,email) {
         try{
             businessNetworkConnection = new BusinessNetworkConnection()
             await businessNetworkConnection.connect('admin@wizticket')
@@ -111,7 +111,12 @@ module.exports = {
             /* Create the artist participant */
             const artist = factory.newResource(namespace+'.participants','Artist',artistId)
             const information = factory.newConcept(namespace+'.utilities','PersonalInformation')
+            information.firstname = firstName
+            information.lastname = lastName
+            information.email = email
             artist.information = information
+            const participantRegistry = await businessNetworkConnection.getParticipantRegistry(namespace+'.participants.Artist')
+            await participantRegistry.add(artist)
             /* Add artist participant */
             const identity = await businessNetworkConnection.issueIdentity(namespace+'.participants.Artist#'+artistId,artistId)
             /* Import card for identity */
@@ -151,12 +156,32 @@ module.exports = {
         }
     },
 
+    ArtistData: async function (artistId, cardId) {
+        try {
+            businessNetworkConnection = new BusinessNetworkConnection()
+            await businessNetworkConnection.connect(cardId)
+            /* Get fan from the network */
+            const artistRegistry = await businessNetworkConnection.getParticipantRegistry(namespace+'.participants.Artist')
+            const artist = await artistRegistry.get(artistId)
+            /* disconnect */
+            await businessNetworkConnection.disconnect(cardId)
+            /* Return data */
+            return artist
+        } catch(err) {
+            console.log(err);
+            var error = {};
+            error.error = err.message
+            return error;
+        }
+    },
+
     showAllEvents: async function(cardId) {
         try {
             businessNetworkConnection = new BusinessNetworkConnection()
             await businessNetworkConnection.connect(cardId)
             /* Query all events */
-            const allEvents = await businessNetworkConnection.query('showAllEvents')
+            const eventRegistry = await businessNetworkConnection.getParticipantRegistry(namespace+'.events.EventHappening')
+            const allEvents = await eventRegistry.getAll()
             /* Disconnect */
             await businessNetworkConnection.disconnect(cardId)
             /* return results */

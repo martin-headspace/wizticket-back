@@ -10,10 +10,16 @@
 </head>
 <body>
     <h1> Artist registration </h1>
-    <p> We will need a ArtistId </p>
+    <p> We will need a ArtistID </p>
     <form action="/api/registerArtist" method="POST">
-        <label> ArtistId </label>
-        <input type="text" name="artistId" id="fanId" placeholder="" required>
+        <label> ArtistID </label>
+        <input type="text" name="artistId" id="fanId" placeholder="" required><br>
+        <label> First Name </label>
+        <input type="text" name="firstname" id="fanId" placeholder="" required><br>
+        <label> Last Name </label>
+        <input type="text" name="lastname" id="fanId" placeholder="" required><br>
+        <label> E-Mail </label>
+        <input type="text" name="email" id="fanId" placeholder="" required><br><br>
         <button type="submit"> Register </button>
     </form>
     

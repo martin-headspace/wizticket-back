@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Artist page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css">
+    <script src="main.js"></script>
+</head>
+<body>
+    <h1>Welcome <%= artist.firstname %></h1>
+    <a href="/event/new"> create a new event </a>
+    <hr>
+    <h1>Your events</h1>
+    <% if(artist.events.length == 0){%>
+        <p> You havent created a new event, create one <a href="/event/new"> now </a>!</p>
+    <% } else { %>
+        <% for(var i = 0; i < artist.events; i++){ %>
+            <p> Event: <%= artist.events[i].name %>, <%= artist.events[i].description %> </p>
+    <% }} %>
+</body>
+</html>
