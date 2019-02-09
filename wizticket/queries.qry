@@ -1,0 +1,32 @@
+query showAllEvents {
+  description: "Show all events"
+  statement:
+  SELECT org.madducks.wizticket.events.EventHappening
+}
+
+query showAllTickets {
+  description: "Show all tickets"
+  statement:
+  SELECT org.madducks.wizticket.tickets.Ticket
+}
+
+query showFanTickets {
+  description: "Show a Fan's owned tickets"
+  statement:
+  SELECT org.madducks.wizticket.tickets.Ticket
+    WHERE (owner.fanId == _$fanId)
+}
+
+query showArtistsEvents {
+  description: "Show all events where an artist is participating"
+  statement:
+  SELECT org.madducks.wizticket.events.EventHappening
+    WHERE (owner.artistId == _$artistId)
+}
+
+query showEventOwnerEventPlaces {
+  description: "Show which event places are owned by a participant"
+  statement:
+  SELECT org.madducks.wizticket.events.EventSpace
+    WHERE (owner.ESId == _$ESId)
+}

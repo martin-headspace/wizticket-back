@@ -1,0 +1,17 @@
+sed -e 's/localhost:7051/peer0.org1.example.com:7051/' -e 's/localhost:7053/peer0.org1.example.com:7053/' -e 's/localhost:7054/ca.org1.example.com:7054/'  -e 's/localhost:7050/orderer.example.com:7050/'  < $HOME/.composer/cards/restadmin@wizticket/connection.json  > /tmp/connection.json && cp -p /tmp/connection.json $HOME/.composer/cards/restadmin@wizticket/ 
+
+composer participant add -c admin@wizticket -d '{
+  "$class": "org.madducks.wizticket.participants.Artist",
+  "artistId": "0522",
+  "information": {
+    "$class": "org.madducks.wizticket.utilities.PersonalInformation"
+  }
+}'
+composer identity issue -c admin@wizticket -f luis.card -u jdoe -a "resource:org.madducks.wizticket.participants.Artist#0522"
+composer card import -f jdoe.card
+
+sed -e 's/localhost:7051/peer0.org1.example.com:7051/' -e 's/localhost:7053/peer0.org1.example.com:7053/' -e 's/localhost:7054/ca.org1.example.com:7054/'  -e 's/localhost:7050/orderer.example.com:7050/'  < $HOME/.composer/cards/mando@wizticket/connection.json  > /tmp/connection.json && cp -p /tmp/connection.json $HOME/.composer/cards/mando@wizticket/ 
+
+sed -e 's/localhost:7051/peer0.org1.example.com:7051/' -e 's/localhost:7053/peer0.org1.example.com:7053/' -e 's/localhost:7054/ca.org1.example.com:7054/'  -e 's/localhost:7050/orderer.example.com:7050/'  < $HOME/.composer/cards/jdoe@wizticket/connection.json  > /tmp/connection.json && cp -p /tmp/connection.json $HOME/.composer/cards/jdoe@wizticket/ 
+
+composer card export -f luis_exp.card -c jdoe@wizticket ; rm luis.card

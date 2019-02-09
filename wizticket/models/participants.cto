@@ -11,15 +11,15 @@ import org.madducks.wizticket.utilities.*
 
 participant Fan identified by fanId {
  o String fanId 
- o PersonalInformation information
+ o PersonalInformation information optional
 }
 
 participant EventSpaceOwner identified by ESId {
  o String ESId
- o PersonalInformation information
+ o PersonalInformation information optional
 }
 
 participant Artist identified by artistId {
   o String artistId
-  o PersonalInformation information
+  o PersonalInformation information optional
 }

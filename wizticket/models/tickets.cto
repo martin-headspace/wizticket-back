@@ -1,0 +1,60 @@
+/**
+* Ticketing file
+* All ticket logic goes here 
+*/
+
+
+namespace org.madducks.wizticket.tickets
+
+/* IMPORTS */
+import org.madducks.wizticket.participants.*
+import org.madducks.wizticket.events.*
+
+/* #### Ticketing System #### */
+
+enum Status {
+ o RELEASED
+ o BOUGHT
+ o RESOLD
+ o USED
+}
+
+enum Category {
+ o PLATINUM
+ o GOLD
+ o SILVER
+ o BRONCE
+}
+
+asset Ticket identified by ticketID {
+ o String ticketID
+ o Status status
+ o Category category
+ o Integer seat
+ o Integer cost
+ --> EventHappening event
+ --> Fan owner optional
+}
+
+
+/* #### TRANSACTIONS #### */
+transaction buyTicket {
+  o String status
+  --> Ticket ticket
+  --> Fan owner
+}
+
+transaction resellTicket {
+ o Integer cost
+ --> Fan newOwner
+ --> Ticket ticket
+}
+
+transaction useTicket {
+  --> Ticket ticket
+}
+
+/* #### EVENTS #### */
+event tradeNotification {
+ --> Ticket ticket 
+}
