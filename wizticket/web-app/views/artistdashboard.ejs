@@ -17,7 +17,7 @@
         <p> You havent created a new event, create one <a href="/event/new"> now </a>!</p>
     <% } else { %>
         <% for(var i = 0; i < artist.events.length; i++){ %>
-            <p> Event: <%= artist.events[i].name %>, <%= artist.events[i].description %> </p>
+            <p> Event: <%= artist.events[i].name %>, <%= artist.events[i].description %> <a href="/event/<%= artist.events[i].EId%>/tickets"%>See tickets</a></p>
     <% }} %>
 </body>
 </html>

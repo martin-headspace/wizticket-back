@@ -103,6 +103,24 @@ app.get('/event/new',(req,res)=>{
     
 })
 
+app.get('/event/:EId/tickets',(req,res)=>{
+    console.log(req.params.EId)
+    var tixs
+    network.showAllEventsTickets(req.params.EId).then((tickets)=>{
+        if(tickets.error != null){
+            res.json({
+                error: tickets.error
+            })
+        } else {
+            tix = tickets
+        }
+    }).then(()=>{
+        res.render('allTickets.ejs',{
+            tickets: tixs
+        })
+    })
+})
+
 app.post('/api/registerEvent',(req,res) => {
     network.registerEvent(
         req.body.name,

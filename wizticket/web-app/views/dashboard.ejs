@@ -26,7 +26,7 @@
         <p> No events are happening soon! </p>
     <% } else { %>
         <% for(var i = 0; i < participant.events.length; i++){ %>
-            <p> Event: <%= participant.events[i].name%>, <%= participant.events[i].description %> </p>
+            <p> Event: <%= participant.events[i].name%>, <%= participant.events[i].description %> <a href="/event/<%= participant.events[i].EId %>/tickets">see tickets</a></p>
     <% }} %>
 </body>
 </html>
