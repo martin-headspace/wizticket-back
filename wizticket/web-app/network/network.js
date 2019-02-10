@@ -163,6 +163,43 @@ module.exports = {
             return error;
         }
     },
+    // req.body.name,
+    // req.body.description,
+    // req.body.artists.split(','),
+    // req.body.eventDate,
+    // req.body.ESId,
+    // req.body.artistId
+    registerEvent : async function(name,description,artists,eventdate,ESId,artistId,uuid) {
+        try{
+            businessNetworkConnection = new BusinessNetworkConnection()
+            await businessNetworkConnection.connect('admin@wizticket')
+             /* Create the factory */
+             factory = businessNetworkConnection.getBusinessNetwork().getFactory()
+             /* Create the ES Asset */
+             const event = factory.newResource(namespace+'.events','EventHappening',uuid)
+             event.name = name
+             event.description = description
+             event.artists = []
+            //  for (artist in artists) {
+            //     event.artists.push(factory.newRelationship(namespace+'.participants','Artist',artist))
+            //  }
+             event.eventDate = new Date(eventdate)
+             event.space = factory.newRelationship(namespace+'.events','EventSpace',ESId)
+             event.owner = factory.newRelationship(namespace+'.participants','Artist',artistId)
+
+             const ESRegistry = await businessNetworkConnection.getAssetRegistry(namespace+'.events.EventHappening')
+            await ESRegistry.add(event)
+            
+            await businessNetworkConnection.disconnect('admin@wizticket')
+            /* Success */
+            return true
+        }catch(err){
+            console.log(err);
+            var error = {};
+            error.error = err.message
+            return error;
+        }
+    },
 
     registerES : async function (ESId,name,description,city,country,region,street,postalcode,seating,owner) {
         try{
@@ -263,12 +300,12 @@ module.exports = {
     showAllEvents: async function(cardId) {
         try {
             businessNetworkConnection = new BusinessNetworkConnection()
-            await businessNetworkConnection.connect(cardId)
+            await businessNetworkConnection.connect('admin@wizticket')
             /* Query all events */
-            const eventRegistry = await businessNetworkConnection.getParticipantRegistry(namespace+'.events.EventHappening')
+            const eventRegistry = await businessNetworkConnection.getAssetRegistry(namespace+'.events.EventHappening')
             const allEvents = await eventRegistry.getAll()
             /* Disconnect */
-            await businessNetworkConnection.disconnect(cardId)
+            await businessNetworkConnection.disconnect('admin@wizticket')
             /* return results */
             return allEvents
         } catch(err) {

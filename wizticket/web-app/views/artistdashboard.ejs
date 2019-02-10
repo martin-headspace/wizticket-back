@@ -16,7 +16,7 @@
     <% if(artist.events.length == 0){%>
         <p> You havent created a new event, create one <a href="/event/new"> now </a>!</p>
     <% } else { %>
-        <% for(var i = 0; i < artist.events; i++){ %>
+        <% for(var i = 0; i < artist.events.length; i++){ %>
             <p> Event: <%= artist.events[i].name %>, <%= artist.events[i].description %> </p>
     <% }} %>
 </body>

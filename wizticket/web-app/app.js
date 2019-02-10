@@ -81,6 +81,50 @@ app.get('/place/new',(req,res)=>{
     res.render('placeform.ejs',{owner: participant})
 })
 
+app.get('/event/new',(req,res)=>{
+    var spacess
+    network.showAllEventSpaces(req.session.artistId,req.session.artistId).then((spaces)=>{
+        if(spaces.error = null){
+            res.json({
+                error: spaces.error
+            })
+        } else {
+            spacess = spaces
+            console.log()
+        }
+    }).then(()=>{
+        res.render('eventform.ejs',{
+            owner: {
+                artist: req.session.artistId,
+                spaces: spacess
+            }
+        })
+    })
+    
+})
+
+app.post('/api/registerEvent',(req,res) => {
+    network.registerEvent(
+        req.body.name,
+        req.body.description,
+        req.body.artists.split(','),
+        req.body.eventDate,
+        req.body.ESId,
+        req.body.artistId,
+        uuidv4()
+    ).then((response)=>{
+        if(response.error != null){
+            res.json({
+                error: response.error
+            })
+        } else {
+            res.json({
+                success: response
+            })
+        }
+    })
+})
+
 /* POST REQUESTS */
 app.post('/api/registerFan',(req,res)=>{
     var fanId = req.body.fanId
