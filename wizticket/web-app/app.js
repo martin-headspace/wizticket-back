@@ -71,6 +71,16 @@ app.get('/eventownerregistration',(req,res)=>{
     res.render('eventownerregistration.ejs')
 })
 
+app.get('/place/new',(req,res)=>{
+    var participant = {}
+    participant.ESId = req.session.ESId
+    participant.firstname = req.session.firstName
+    participant.secondName = req.session.secondName
+    participant.email = req.session.email
+    participant.place = req.session.place
+    res.render('placeform.ejs',{owner: participant})
+})
+
 /* POST REQUESTS */
 app.post('/api/registerFan',(req,res)=>{
     var fanId = req.body.fanId
@@ -110,6 +120,52 @@ app.post('/api/registerArtist',(req,res)=>{
     })
 })
 
+app.post('/api/registerOwner',(req,res)=>{
+    var ESId = req.body.ESId
+    var firstName = req.body.firstname
+    var lastName = req.body.lastname
+    var email = req.body.email
+    console.log('params: ',ESId)
+    network.registerOwner(ESId,firstName,lastName,email).then((response)=>{
+        if(response.error!=null){
+            res.json({
+                error: response.error
+            })
+        } else {
+            res.json({
+                success: response
+            })
+        }
+    })
+})
+
+function uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8)
+      return v.toString(16)
+    })
+  }
+  
+
+app.post('/api/registerES',(req,res)=>{
+    var seats = req.body.seating.split(',')
+    var seating = []
+    for (var i = 0; i < seats.length;i++) {
+        seating.push(parseInt(seats[i]))
+    }
+    network.registerES(uuidv4(),req.body.name,req.body.description,req.body.city,req.body.country,req.body.region,req.body.street,req.body.postalcode,seating,req.body.ESId).then((response)=>{
+        if(response.error!=null){
+            res.json({
+                error: response.error
+            })
+        } else {
+            res.json({
+                success: response
+            })
+        }
+    })
+})
+
 app.get('/home',(req,res)=>{
     var participant = {}
     if (req.session.fanId != null){
@@ -127,6 +183,14 @@ app.get('/home',(req,res)=>{
         participant.events = req.session.events
         console.log(participant)
         res.render('artistdashboard.ejs',{artist: participant})
+    } else if (req.session.ESId != null) {
+        participant.ESId = req.session.ESId
+        participant.firstname = req.session.firstName
+        participant.secondName = req.session.secondName
+        participant.email = req.session.email
+        participant.place = req.session.space
+        console.log(participant)
+        res.render('ownerdashboard.ejs',{owner: participant})
     }
     
 })
@@ -187,6 +251,39 @@ app.post('/api/artistData',(req,res)=>{
                 })
             } else {
                 req.session.events = events
+                res.redirect('/home')
+            }
+        })
+    }).catch((error)=>{
+        console.log(error)
+    })
+})
+
+app.post('/api/OwnerData',(req,res)=>{
+    var ESId = req.body.ESId
+    var cardId = req.body.cardId
+    console.log(ESId,cardId)
+    var returnData = {}
+    network.OwnerData(ESId,cardId).then((fan) => {
+        if(fan.error != null){
+            res.json({
+                error: fan.error
+            })
+        } else {     
+            req.session.ESId = fan.ESId
+            req.session.firstName = fan.information.firstname
+            req.session.secondName = fan.information.lastname
+            req.session.email = fan.information.email   
+        }
+    }).then(()=>{
+        network.showAllEventSpaces(cardId).then((events)=>{
+            console.log(events)
+            if (events.error != null ){
+                res.json({
+                    error: events.error
+                })
+            } else {
+                req.session.space = events
                 res.redirect('/home')
             }
         })

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Event Place Registration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css">
+    <script src="main.js"></script>
+</head>
+<body>
+    <h1> New Event Space </h1>
+    <form action="/api/registerES" method="POST"><br>
+        <label>
+            Name
+        </label>
+        <input type="text" name="name" required><br>
+        <label>
+            Description
+        </label>
+        <input type="text" name="description" required><br>
+        <!-- ADDRESS -->
+        <label>
+                City
+            </label>
+            <input type="text" name="city" required><br>
+            <label>
+                    Country
+                </label>
+                <input type="text" name="country" required><br>
+                <label>
+                        Region
+                    </label>
+                    <input type="text" name="region" required><br>
+                    <label>
+                            Street
+                        </label>
+                        <input type="text" name="street" required><br>
+                        <label>
+                                Postal Code
+                            </label>
+                            <input type="text" name="postalcode" required><br>
+                            
+        <label>
+            Seating
+        </label>
+        <input type="text" name="seating" required><br>
+        <label>
+            Owner
+        </label>
+        <input type="text" name="ESId" placeholder="<%= owner.ESId %>" required><br>
+        <button value="submit">Submit</button>
+    </form>
+</body>
+</html>

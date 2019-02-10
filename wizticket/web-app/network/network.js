@@ -133,6 +133,91 @@ module.exports = {
         }
     },
 
+    registerOwner: async function (ESId,firstName,lastName,email) {
+        try{
+            businessNetworkConnection = new BusinessNetworkConnection()
+            await businessNetworkConnection.connect('admin@wizticket')
+            /* Create the factory */
+            factory = businessNetworkConnection.getBusinessNetwork().getFactory()
+            /* Create the artist participant */
+            const artist = factory.newResource(namespace+'.participants','EventSpaceOwner',ESId)
+            const information = factory.newConcept(namespace+'.utilities','PersonalInformation')
+            information.firstname = firstName
+            information.lastname = lastName
+            information.email = email
+            artist.information = information
+            const participantRegistry = await businessNetworkConnection.getParticipantRegistry(namespace+'.participants.EventSpaceOwner')
+            await participantRegistry.add(artist)
+            /* Add artist participant */
+            const identity = await businessNetworkConnection.issueIdentity(namespace+'.participants.EventSpaceOwner#'+ESId,ESId)
+            /* Import card for identity */
+            await importCardForIdentity(ESId,identity)
+            /* Disconnect */
+            await businessNetworkConnection.disconnect('admin@wizticket')
+            /* Success */
+            return true
+        } catch(err){
+            console.log(err);
+            var error = {};
+            error.error = err.message
+            return error;
+        }
+    },
+
+    registerES : async function (ESId,name,description,city,country,region,street,postalcode,seating,owner) {
+        try{
+            businessNetworkConnection = new BusinessNetworkConnection()
+            await businessNetworkConnection.connect('admin@wizticket')
+            /* Create the factory */
+            factory = businessNetworkConnection.getBusinessNetwork().getFactory()
+            /* Create the ES Asset */
+            const ES = factory.newResource(namespace+'.events','EventSpace',ESId)
+            ES.name = name
+            ES.description = description
+            ES.seating = seating
+            ES.events = []
+            const ESO = factory.newRelationship(namespace+'.participants','EventSpaceOwner',owner)
+            ES.owner = ESO
+            const address = factory.newConcept(namespace+'.utilities','Address')
+            address.city = city
+            address.country = country
+            address.region = region
+            address.street = street
+            address.postalCode = postalcode
+            ES.address = address
+            const ESRegistry = await businessNetworkConnection.getAssetRegistry(namespace+'.events.EventSpace')
+            await ESRegistry.add(ES)
+            
+            await businessNetworkConnection.disconnect('admin@wizticket')
+            /* Success */
+            return true
+        } catch(err){
+            console.log(err);
+            var error = {};
+            error.error = err.message
+            return error;
+        }
+    },
+
+    OwnerData: async function (ESId,cardId) {
+        try {
+            businessNetworkConnection = new BusinessNetworkConnection()
+            await businessNetworkConnection.connect(ESId)
+            /* Get fan from the network */
+            const fanRegistry = await businessNetworkConnection.getParticipantRegistry(namespace+'.participants.EventSpaceOwner')
+            const fan = await fanRegistry.get(ESId)
+            /* disconnect */
+            await businessNetworkConnection.disconnect(cardId)
+
+            return fan
+        } catch(err) {
+            console.log(err);
+            var error = {};
+            error.error = err.message
+            return error;
+        }
+    },
+
     /* Get Fan's Data 
     * @param {String} fanId fanId
     */
@@ -184,6 +269,25 @@ module.exports = {
             const allEvents = await eventRegistry.getAll()
             /* Disconnect */
             await businessNetworkConnection.disconnect(cardId)
+            /* return results */
+            return allEvents
+        } catch(err) {
+            console.log(err);
+            var error = {};
+            error.error = err.message
+            return error;
+        }
+    },
+
+    showAllEventSpaces: async function(cardId) {
+        try {
+            businessNetworkConnection = new BusinessNetworkConnection()
+            await businessNetworkConnection.connect('admin@wizticket')
+            /* Query all events */
+            const eventRegistry = await businessNetworkConnection.getAssetRegistry(namespace+'.events.EventSpace')
+            const allEvents = await eventRegistry.getAll()
+            /* Disconnect */
+            await businessNetworkConnection.disconnect('admin@wizticket')
             /* return results */
             return allEvents
         } catch(err) {

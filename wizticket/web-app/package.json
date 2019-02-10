@@ -1,6 +1,6 @@
 {
   "name": "wizticket-app",
-  "version": "0.0.1",
+  "version": "0.5.5",
   "description": "A distributed ticketing system",
   "main": "app.js",
   "scripts": {

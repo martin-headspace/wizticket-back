@@ -16,7 +16,7 @@ asset EventSpace identified by ESId {
  o String description
  o Address address
  o Integer[] seating
- o EventHappening[] events
+ o EventHappening[] events optional
  --> EventSpaceOwner owner
 }
 
