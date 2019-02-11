@@ -10,6 +10,42 @@ query showAllTickets {
   SELECT org.madducks.wizticket.tickets.Ticket
 }
 
+query showAllTicketsByEvent {
+  description: "Show all available tickets by event"
+  statement:
+  SELECT org.madducks.wizticket.tickets.Ticket
+    WHERE ((status == released) AND (event.name = _$name))
+}
+
+query showEventsByName{
+  description: "Show all events for a specific event by name"
+  statement:
+  SELECT org.madducks.wizticket.events.EventHappening
+    WHERE (name == _$name)
+}
+
+query showEventsByDate{
+  description: "Show all Events for a specific date"
+  statement:
+  SELECT org.madducks.wizticket.events.EventHappening
+    WHERE (eventDate == _$date)
+}
+
+query showEventsBySpace{
+  description: "Show all Events for a specific space"
+  statement:
+  SELECT org.madducks.wizticket.events.EventHappening
+    WHERE (space.name == _$space)
+}
+
+query showEventsBySeatsAvailable{
+  description: "Show all Events for a specific space NO SE SI SE HACE ASI"
+  statement:
+  SELECT org.madducks.wizticket.events.EventSpace
+    WHERE (seating.count() > 1)
+    ORDER BY quantity
+}
+
 query showFanTickets {
   description: "Show a Fan's owned tickets"
   statement:
