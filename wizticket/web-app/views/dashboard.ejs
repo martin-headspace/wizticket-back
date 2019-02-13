@@ -6,7 +6,7 @@
     <title>Welcome <%= participant.firstname %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css">
-    <script src="main.js"></script>
+    <script src="../app.js"></script>
 </head>
 <body>
     <h1>Hello <%= participant.firstname %></h1>
@@ -14,7 +14,7 @@
     
         <% if (participant.fanId != null) { %>
             <p>You're a fan! </p>
-        <% } else if (artistId != null){ %>
+        <% } else if (participant.artistId != null){ %>
             <p> You're an artist!</p>
         <% } else { %>
             <p> You're an event place owner!</p>
